@@ -21,7 +21,7 @@ This is intended as a proof of concept for nmbl.
 
 ## build the rpm:
 ```bash
-make clean && make OS_DIST=.fc38 OS_VERSION=38 KVRA=6.2.9-300.fc38.x86_64 nmbl-6.2.9-300.fc38.x86_64.rpm
+make clean && make OS_DIST=.fc39 OS_VERSION=39 KVRA=$(uname -r) nmbl-$(uname -r).rpm
 ```
 
 ## install that rpm on the machine
