@@ -1,6 +1,11 @@
 #!/bin/bash
 
 root_args=""
+arch=$(uname -m)
+AR=x64
+if [[ $arch = aarch64 ]]; then
+    AR=aa64;
+fi
 
 check_lvm () {
     lsblk -f | grep "LVM" > /dev/null 2>&1
@@ -42,8 +47,8 @@ fi
 idex=$(efibootmgr | tail -n 1 | cut -d' ' -f1 | grep -o "[1-9]*")
 idex=$(($idex+1))
 
-echo -n "\nmbl-cloud.uki console=ttyS0 $(echo $root_args) boot=$(awk '/ \/boot / {print $1}' /etc/fstab) rd.system.gpt_auto=0" | iconv -f UTF8 -t UCS-2LE | efibootmgr -b 00$idex -C -d /dev/vda -p 1 -L nmbl_switch -l /EFI/fedora/shimx64.efi -@ - -n 00$idex
+echo -n "\nmbl-cloud.uki console=ttyS0 $(echo $root_args) boot=$(awk '/ \/boot / {print $1}' /etc/fstab) rd.system.gpt_auto=0" | iconv -f UTF8 -t UCS-2LE | efibootmgr -b 00$idex -C -d /dev/vda -p 1 -L nmbl_switch -l /EFI/fedora/shim${AR}.efi -@ - -n 00$idex
 
 idex=$(($idex+1))
 
-echo -n "\nmbl-workstation.uki console=ttyS0 $(echo $root_args) boot=$(awk '/ \/boot / {print $1}' /etc/fstab) rd.system.gpt_auto=0" | iconv -f UTF8 -t UCS-2LE | efibootmgr -b 00$idex -C -d /dev/vda -p 1 -L nmbl_kexec -l /EFI/fedora/shimx64.efi -@ - -n 00$idex
+echo -n "\nmbl-workstation.uki console=ttyS0 $(echo $root_args) boot=$(awk '/ \/boot / {print $1}' /etc/fstab) rd.system.gpt_auto=0" | iconv -f UTF8 -t UCS-2LE | efibootmgr -b 00$idex -C -d /dev/vda -p 1 -L nmbl_kexec -l /EFI/fedora/shim${AR}.efi -@ - -n 00$idex
