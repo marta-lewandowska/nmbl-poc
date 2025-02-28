@@ -1,4 +1,13 @@
 #!/bin/bash
 
-echo -e "\n[$(date '+%H:%M:%S  %d-%m-%Y')] rebooting." >> /var/log/entry_booted.txt
+entry=$(efibootmgr | grep BootNext | cut -d':' -f2)
+if [[ -n $entry ]]; then
+  entry=$(printf 'Boot%s' $entry)
+  ebe=$(efibootmgr | grep $entry | cut -f1)
+else
+  entry=$(efibootmgr | grep BootOrder | cut -d':' -f2)
+  ebe=$(echo $entry | cut -d',' -f1)
+fi
+echo -e "\n[$(date '+%H:%M:%S  %d-%m-%Y')] BootNext : $ebe" >> /var/log/entry_booted.txt
+echo "[$(date '+%H:%M:%S  %d-%m-%Y')] rebooting." >> /var/log/entry_booted.txt
 reboot
