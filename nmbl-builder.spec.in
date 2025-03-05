@@ -1,6 +1,4 @@
 %global debug_package %{nil}
-%global kver %{expand:%(rpm -q kernel-core --qf '%%{VERSION}\\n' | tail -n 1 )}
-%global krel %{expand:%(rpm -q kernel-core --qf '%%{RELEASE}\\n' | tail -n 1 )}
 
 Summary: nmbl proof of concept as a package
 Name: nmbl-builder
@@ -22,7 +20,7 @@ BuildRequires: git
 BuildRequires: grub2-emu
 BuildRequires: grub2-tools
 BuildRequires: grub2-tools-minimal
-BuildRequires: kernel-core
+BuildRequires: kernel-core-$(KVRA)
 BuildRequires: kernel-modules
 BuildRequires: kernel-modules-core
 BuildRequires: kexec-tools
@@ -38,15 +36,6 @@ BuildRequires: systemd-ukify
 Source0: nmbl-builder-%{VERSION}.tar.xz 
 
 %description
-nmbl-poc is a proof of concept for a bootloader for UEFI machines based on
-the linux kernel and grub-emu, using either switchroot or kexec.
-
-%package -n nmbl
-Summary: nmbl proof of concept as a package
-Version: %{kver}
-Release: %{krel}
-
-%description -n nmbl
 nmbl-poc is a proof of concept for a bootloader for UEFI machines based on
 the linux kernel and grub-emu, using either switchroot or kexec.
 
@@ -66,10 +55,6 @@ mv nmbl-workstation.signed.uki nmbl-workstation.uki
 
 %install
 %make_install ESPDIR="%{efi_esp_dir}"
-
-%files -n nmbl
-%defattr(-,root,root,-)
-%{efi_esp_dir}/*.uki
 
 %changelog
 * Fri Mar 17 2023 Peter Jones <pjones@redhat.com> - 0-0

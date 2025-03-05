@@ -1,6 +1,4 @@
 %global debug_package %{nil}
-%global kver %{expand:%(rpm -q kernel-core --qf '%%{VERSION}' | tail -n 1)}
-%global krel %{expand:%(rpm -q kernel-core --qf '%%{RELEASE}' | tail -n 1)}
 
 Summary: nmbl proof of concept as a dracut module
 Name: dracut-nmbl
@@ -16,7 +14,7 @@ BuildRequires: make
 
 Requires: kexec-tools
 
-Source0: dracut-nmbl-%{version}.tar.xz
+Source0: dracut-nmbl-%{VERSION}.tar.xz
 
 %description
 nmbl-poc is a proof of concept for a bootloader for UEFI machines based on

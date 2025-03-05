@@ -31,15 +31,15 @@ nmbl-builder-$(VERSION).tar.xz :
 nmbl-builder-$(VR).src.rpm : nmbl-builder.spec nmbl-builder-$(VERSION).tar.xz
 	rpmbuild $(RPMBUILD_ARGS) -bs $<
 
-nmbl-$(KVRA).rpm: nmbl-builder-$(VR).src.rpm dracut-nmbl-$(VR).noarch.rpm
+nmbl-$(VR).rpm:
 	mock -r "$(MOCK_ROOT_NAME)" --install dracut-nmbl-$(VR).noarch.rpm --cache-alterations --no-cleanup-after
 	mock -r "$(MOCK_ROOT_NAME)" --installdeps nmbl-builder-$(VR).src.rpm --cache-alterations --no-clean --no-cleanup-after
 	mock -r "$(MOCK_ROOT_NAME)" --rebuild nmbl-builder-$(VR).src.rpm --no-clean
 	mv -v "$(MOCK_ROOT_PATH)/result/$@" .
 
-rpm: nmbl-$(KVRA).rpm
+rpm: nmbl-$(VR).rpm
 
-deploy: nmbl-$(KVRA).rpm
+deploy: nmbl-$(VR).rpm
 	scp $< "root@$(DEPLOY_HOST):"
 	ssh "root@$(DEPLOY_HOST)" ./deploy.sh "$<"
 
