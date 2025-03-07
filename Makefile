@@ -20,6 +20,8 @@ dracut-nmbl-$(VERSION).tar.xz :
 dracut-nmbl-$(VR).src.rpm : dracut-nmbl.spec dracut-nmbl-$(VERSION).tar.xz
 	rpmbuild $(RPMBUILD_ARGS) -bs $<
 
+dracut-nmbl: dracut-nmbl-$(VR).noarch.rpm
+
 dracut-nmbl-$(VR).noarch.rpm : dracut-nmbl-$(VR).src.rpm
 	mock -r "$(MOCK_ROOT_NAME)" --rebuild dracut-nmbl-$(VR).src.rpm
 	mv "$(MOCK_ROOT_PATH)/result/$@" .
@@ -28,18 +30,19 @@ nmbl-builder-$(VERSION).tar.xz :
 	$(MAKE) -C nmbl-builder tarball
 	mv -v nmbl-builder/nmbl-builder-$(VERSION).tar.xz .
 
+nmbl-builder: nmbl-builder-$(VR).src.rpm
+
 nmbl-builder-$(VR).src.rpm : nmbl-builder.spec nmbl-builder-$(VERSION).tar.xz
 	rpmbuild $(RPMBUILD_ARGS) -bs $<
 
-nmbl-$(KVRA).rpm: nmbl-builder-$(VR).src.rpm dracut-nmbl-$(VR).noarch.rpm
+nmbl-@kvra@.rpm:
 	mock -r "$(MOCK_ROOT_NAME)" --install dracut-nmbl-$(VR).noarch.rpm --cache-alterations --no-cleanup-after
 	mock -r "$(MOCK_ROOT_NAME)" --installdeps nmbl-builder-$(VR).src.rpm --cache-alterations --no-clean --no-cleanup-after
 	mock -r "$(MOCK_ROOT_NAME)" --rebuild nmbl-builder-$(VR).src.rpm --no-clean
-	mv -v "$(MOCK_ROOT_PATH)/result/$@" .
 
-rpm: nmbl-$(KVRA).rpm
+rpm: nmbl-@kvra@.rpm
 
-deploy: nmbl-$(KVRA).rpm
+deploy: nmbl-@kvra@.rpm
 	scp $< "root@$(DEPLOY_HOST):"
 	ssh "root@$(DEPLOY_HOST)" ./deploy.sh "$<"
 

@@ -11,13 +11,15 @@ DESTDIR := temp
 DATE=$(shell date "+%Y%m%d")
 ESPDIR := /boot/efi/EFI/BOOT
 ARCH := $(shell rpm --eval '%{_build_arch}')
-KVRA := $(shell rpm -q kernel-core --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n' | tail -n 1)
+#KVRA := $(shell rpm -q kernel-core --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n' | tail -n 1)
 # KVRA ?= 6.2.11-300.fc38.$(ARCH)
+KVRA := $(shell ls -1 /lib/modules | tail -1)
 EFI_ARCH := $(shell rpm --eval '%{efi_arch}')
 OS_NAME := $(shell grep '^ID=' /etc/os-release | sed 's/ID=//')
 OS_VERSION := $(shell grep '^VERSION_ID=' /etc/os-release | sed 's/VERSION_ID=//')
 # OS_VERSION ?= 38
-OS_DIST := $(shell rpm --eval '%{dist}')
+#OS_DIST := $(shell rpm --eval '%{dist}')
+OS_DIST=$(shell ls -1 /lib/modules | grep -Eo '\.[cefln]+[0-9]+' | tail -n1)
 # OS_DIST ?= .fc38
 VR := $(VERSION)-$(RELEASE)$(OS_DIST)
 

@@ -1,6 +1,10 @@
 %global debug_package %{nil}
-%global kver %{expand:%(rpm -q kernel-core --qf '%%{VERSION}' | tail -n 1)}
-%global krel %{expand:%(rpm -q kernel-core --qf '%%{RELEASE}' | tail -n 1)}
+%global kvra %{expand:%(ls -1 /lib/modules | tail -n1)}
+%global kver %{expand:%(ls -1 /lib/modules | tail -n1 | cut -d'-' -f1)}
+%global krel %{expand:%(ls -1 /lib/modules | tail -n1 | cut -d'-' -f2 | cut -d'.' -f1)}
+%(sed -i 's/@kver@/%{kver}/' nmbl-builder.spec.in)
+%(sed -i 's/@krel@/%{krel}/' nmbl-builder.spec.in)
+%(sed -i 's/@kvra@/%{kvra}/g' Makefile)
 
 Summary: nmbl proof of concept as a dracut module
 Name: dracut-nmbl
