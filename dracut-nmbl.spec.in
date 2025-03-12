@@ -1,10 +1,8 @@
 %global debug_package %{nil}
-%global kvra %{expand:%(ls -1 /lib/modules | tail -n1)}
 %global kver %{expand:%(ls -1 /lib/modules | tail -n1 | cut -d'-' -f1)}
 %global krel %{expand:%(ls -1 /lib/modules | tail -n1 | cut -d'-' -f2 | cut -d'.' -f1)}
-%(sed -i 's/@kver@/%{kver}/' nmbl-builder.spec.in)
-%(sed -i 's/@krel@/%{krel}/' nmbl-builder.spec.in)
-%(sed -i 's/@kvra@/%{kvra}/g' Makefile)
+%(sed -i "s/666/$(kver)/" nmbl-builder.spec.in)
+%(sed -i "s/999/$(krel)/" nmbl-builder.spec.in)
 
 Summary: nmbl proof of concept as a dracut module
 Name: dracut-nmbl

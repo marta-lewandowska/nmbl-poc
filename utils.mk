@@ -4,8 +4,8 @@
 # Copyright Peter Jones <pjones@redhat.com>
 #
 
-VERSION = 0
-RELEASE = 1
+VERSION = 1
+RELEASE = 0
 
 DESTDIR := temp
 DATE=$(shell date "+%Y%m%d")
