@@ -9,6 +9,5 @@ Conflicts=shutdown.target emergency.target
 
 [Service]
 ExecStart=-/bin/grub2-emu --kexec
-ExecStop=-/sbin/reboot
 StandardInput=tty
 StandardOutput=tty
